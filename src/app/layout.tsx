@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import "../styles/globals.css";
 
 const sans = Inter({
@@ -59,6 +60,7 @@ export default function RootLayout({
             </div>
           </footer>
         </div>
+        <Analytics />
       </body>
     </html>
   );
