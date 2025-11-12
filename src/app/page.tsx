@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { Play, Share2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -34,6 +34,14 @@ const GENRE_OPTIONS = [
 ];
 
 export default function Home() {
+  return (
+    <Suspense fallback={<div className="flex min-h-svh items-center justify-center text-gray-400">Loading WatchPicker…</div>}>
+      <WatchPickerApp />
+    </Suspense>
+  );
+}
+
+function WatchPickerApp() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const movieIdParam = searchParams.get("movieId");
