@@ -36,16 +36,6 @@ export default function AboutPage() {
           standards for speed and aesthetic consistency. TMDB provides the backbone of our data.
         </p>
       </section>
-      <section className="space-y-3">
-        <h2 className="text-xl font-semibold text-white">Get In Touch</h2>
-        <p>
-          Have feature ideas or partnerships in mind? Reach us at{" "}
-          <a className="text-rose-300 underline" href="mailto:hello@watchpicker.app">
-            hello@watchpicker.app
-          </a>
-          .
-        </p>
-      </section>
     </main>
   );
 }
