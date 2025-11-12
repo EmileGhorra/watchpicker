@@ -63,84 +63,87 @@ export const buildTmdbMovieUrl = (id: number) =>
 
 export async function fetchRandomMovie(filters: MovieFilters = {}) {
   const apiKey = getApiKey();
-  const params = new URLSearchParams({
-    api_key: apiKey,
-    sort_by: "popularity.desc",
-    "vote_count.gte": "300",
-    include_adult: "false",
-    language: "en-US",
-    page: String(Math.floor(Math.random() * 10) + 1),
-  });
 
-  if (filters.maxRuntime && Number.isFinite(filters.maxRuntime)) {
-    params.set("with_runtime.lte", String(filters.maxRuntime));
+  for (let attempt = 0; attempt < 6; attempt++) {
+    const params = new URLSearchParams({
+      api_key: apiKey,
+      sort_by: "popularity.desc",
+      "vote_count.gte": "300",
+      include_adult: "false",
+      language: "en-US",
+      page: String(Math.floor(Math.random() * 10) + 1),
+    });
+
+    if (filters.maxRuntime && Number.isFinite(filters.maxRuntime)) {
+      params.set("with_runtime.lte", String(filters.maxRuntime));
+    }
+
+    if (filters.region) {
+      params.set("watch_region", filters.region.toUpperCase());
+    }
+
+    if (filters.genreIds?.length) {
+      params.set("with_genres", filters.genreIds.join(","));
+    }
+
+    if (filters.minYear && Number.isFinite(filters.minYear)) {
+      params.set("primary_release_date.gte", `${Math.floor(filters.minYear)}-01-01`);
+    }
+
+    if (filters.maxYear && Number.isFinite(filters.maxYear)) {
+      params.set("primary_release_date.lte", `${Math.floor(filters.maxYear)}-12-31`);
+    }
+
+    if (filters.minRating && Number.isFinite(filters.minRating)) {
+      params.set("vote_average.gte", filters.minRating.toFixed(1));
+    }
+
+    if (filters.maxRating && Number.isFinite(filters.maxRating)) {
+      params.set("vote_average.lte", filters.maxRating.toFixed(1));
+    }
+
+    const response = await fetch(`${TMDB_API_BASE}/discover/movie?${params}`, {
+      cache: "no-store",
+      next: { revalidate: 0 },
+    });
+
+    if (!response.ok) {
+      throw new Error("Unable to load movies right now.");
+    }
+
+    const data = (await response.json()) as { results?: TMDBMoviePayload[] };
+    const results =
+      data.results?.filter((movie) => {
+        if (!movie.overview?.trim()) {
+          return false;
+        }
+
+        if (
+          filters.minRating &&
+          Number.isFinite(filters.minRating) &&
+          (movie.vote_average ?? 0) < filters.minRating
+        ) {
+          return false;
+        }
+
+        if (
+          filters.maxRating &&
+          Number.isFinite(filters.maxRating) &&
+          (movie.vote_average ?? 0) > filters.maxRating
+        ) {
+          return false;
+        }
+
+        return true;
+      }) ?? [];
+
+    if (results.length) {
+      const pick = results[Math.floor(Math.random() * results.length)];
+      return mapMovieToPick(pick);
+    }
   }
 
-  if (filters.region) {
-    params.set("watch_region", filters.region.toUpperCase());
-  }
-
-  if (filters.genreIds?.length) {
-    params.set("with_genres", filters.genreIds.join(","));
-  }
-
-  if (filters.minYear && Number.isFinite(filters.minYear)) {
-    params.set("primary_release_date.gte", `${Math.floor(filters.minYear)}-01-01`);
-  }
-
-  if (filters.maxYear && Number.isFinite(filters.maxYear)) {
-    params.set("primary_release_date.lte", `${Math.floor(filters.maxYear)}-12-31`);
-  }
-
-  if (filters.minRating && Number.isFinite(filters.minRating)) {
-    params.set("vote_average.gte", filters.minRating.toFixed(1));
-  }
-
-  if (filters.maxRating && Number.isFinite(filters.maxRating)) {
-    params.set("vote_average.lte", filters.maxRating.toFixed(1));
-  }
-
-  const response = await fetch(`${TMDB_API_BASE}/discover/movie?${params}`, {
-    cache: "no-store",
-    next: { revalidate: 0 },
-  });
-
-  if (!response.ok) {
-    throw new Error("Unable to load movies right now.");
-  }
-
-  const data = (await response.json()) as { results?: TMDBMoviePayload[] };
-  const results =
-    data.results?.filter((movie) => {
-      if (!movie.overview?.trim()) {
-        return false;
-      }
-
-      if (
-        filters.minRating &&
-        Number.isFinite(filters.minRating) &&
-        (movie.vote_average ?? 0) < filters.minRating
-      ) {
-        return false;
-      }
-
-      if (
-        filters.maxRating &&
-        Number.isFinite(filters.maxRating) &&
-        (movie.vote_average ?? 0) > filters.maxRating
-      ) {
-        return false;
-      }
-
-      return true;
-    }) ?? [];
-
-  if (!results.length) {
-    throw new Error("No movies found with the current filters.");
-  }
-
-  const pick = results[Math.floor(Math.random() * results.length)];
-  return mapMovieToPick(pick);
+  throw new Error("No movies found with the current filters.");
 }
 
 export async function fetchMovieById(id: number) {

@@ -56,8 +56,8 @@ function WatchPickerApp() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [shareFeedback, setShareFeedback] = useState<string | null>(null);
-  const activeMovieId = movie?.id ?? null;
   const skipHydrateIdRef = useRef<number | null>(null);
+  const loadedMovieIdRef = useRef<number | null>(null);
   const toggleGenre = (genreId: number) => {
     setSelectedGenres((current) =>
       current.includes(genreId)
@@ -72,6 +72,7 @@ function WatchPickerApp() {
     router.replace(`?${params.toString()}`, { scroll: false });
     if (skipHydrate) {
       skipHydrateIdRef.current = movieId;
+      loadedMovieIdRef.current = movieId;
     }
   };
 
@@ -89,7 +90,7 @@ function WatchPickerApp() {
       return;
     }
 
-    if (activeMovieId === parsed) {
+    if (loadedMovieIdRef.current === parsed) {
       return;
     }
 
@@ -100,6 +101,7 @@ function WatchPickerApp() {
     fetchMovieById(parsed)
       .then((result) => {
         if (ignore) return;
+        loadedMovieIdRef.current = result.id;
         setMovie(result);
       })
       .catch((err) => {
@@ -116,7 +118,7 @@ function WatchPickerApp() {
     return () => {
       ignore = true;
     };
-  }, [movieIdParam, activeMovieId]);
+  }, [movieIdParam]);
 
   const handlePickMovie = async () => {
     const minYearValue = minYear ? Number(minYear) : undefined;
