@@ -36,12 +36,6 @@ export default function PrivacyPage() {
           abuse. Third-party services like TMDB or AdSense may set cookies per their own policies.
         </p>
       </section>
-      <section className="space-y-3">
-        <h2 className="text-xl font-semibold text-white">Contact</h2>
-        <p>
-          Questions? Reach out at <a className="text-rose-300 underline" href="mailto:privacy@watchpicker.app">privacy@watchpicker.app</a>.
-        </p>
-      </section>
     </main>
   );
 }

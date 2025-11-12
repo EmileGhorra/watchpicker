@@ -35,12 +35,6 @@ export default function TermsPage() {
           external links or services.
         </p>
       </section>
-      <section className="space-y-3">
-        <h2 className="text-xl font-semibold text-white">Contact</h2>
-        <p>
-          Need clarification? Email <a className="text-rose-300 underline" href="mailto:legal@watchpicker.app">legal@watchpicker.app</a>.
-        </p>
-      </section>
     </main>
   );
 }
