@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Script from "next/script";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { Play, Share2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -325,9 +324,9 @@ function WatchPickerApp() {
       </section>
 
       <div className="w-full rounded-xl border border-white/10 bg-gray-900/60 p-4 text-center text-sm text-gray-400">
-        <Script
+        <script
+          async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4822244682021794"
-          strategy="lazyOnload"
           crossOrigin="anonymous"
         />
         <div className="w-full h-24 bg-gray-800/50 rounded-xl flex items-center justify-center text-gray-400 text-sm">
