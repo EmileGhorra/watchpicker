@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: "WatchPicker",
   description: "Netflix-inspired random movie picker powered by TMDB.",
   icons: {
-    icon: "/logo.png",
+    icon: "/icon.png",
   },
 };
 
