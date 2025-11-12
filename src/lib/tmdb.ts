@@ -29,6 +29,7 @@ export interface MovieFilters {
   minYear?: number;
   maxYear?: number;
   minRating?: number;
+  maxRating?: number;
 }
 
 const getApiKey = () => {
@@ -95,6 +96,10 @@ export async function fetchRandomMovie(filters: MovieFilters = {}) {
     params.set("vote_average.gte", filters.minRating.toFixed(1));
   }
 
+  if (filters.maxRating && Number.isFinite(filters.maxRating)) {
+    params.set("vote_average.lte", filters.maxRating.toFixed(1));
+  }
+
   const response = await fetch(`${TMDB_API_BASE}/discover/movie?${params}`, {
     cache: "no-store",
     next: { revalidate: 0 },
@@ -105,7 +110,30 @@ export async function fetchRandomMovie(filters: MovieFilters = {}) {
   }
 
   const data = (await response.json()) as { results?: TMDBMoviePayload[] };
-  const results = data.results?.filter((movie) => movie.overview?.trim()) ?? [];
+  const results =
+    data.results?.filter((movie) => {
+      if (!movie.overview?.trim()) {
+        return false;
+      }
+
+      if (
+        filters.minRating &&
+        Number.isFinite(filters.minRating) &&
+        (movie.vote_average ?? 0) < filters.minRating
+      ) {
+        return false;
+      }
+
+      if (
+        filters.maxRating &&
+        Number.isFinite(filters.maxRating) &&
+        (movie.vote_average ?? 0) > filters.maxRating
+      ) {
+        return false;
+      }
+
+      return true;
+    }) ?? [];
 
   if (!results.length) {
     throw new Error("No movies found with the current filters.");

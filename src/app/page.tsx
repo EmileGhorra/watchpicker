@@ -50,6 +50,7 @@ function WatchPickerApp() {
   const [minYear, setMinYear] = useState<string>("");
   const [maxYear, setMaxYear] = useState<string>("");
   const [minRating, setMinRating] = useState<string>("");
+  const [maxRating, setMaxRating] = useState<string>("");
   const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
   const [movie, setMovie] = useState<MoviePick | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -121,6 +122,7 @@ function WatchPickerApp() {
     const minYearValue = minYear ? Number(minYear) : undefined;
     const maxYearValue = maxYear ? Number(maxYear) : undefined;
     const minRatingValue = minRating ? Number(minRating) : undefined;
+    const maxRatingValue = maxRating ? Number(maxRating) : undefined;
 
     if (
       minYearValue &&
@@ -141,6 +143,25 @@ function WatchPickerApp() {
       return;
     }
 
+    if (
+      maxRatingValue &&
+      (!Number.isFinite(maxRatingValue) || maxRatingValue < 0 || maxRatingValue > 10)
+    ) {
+      setError("Max rating must be between 0 and 10.");
+      return;
+    }
+
+    if (
+      minRatingValue &&
+      maxRatingValue &&
+      Number.isFinite(minRatingValue) &&
+      Number.isFinite(maxRatingValue) &&
+      minRatingValue > maxRatingValue
+    ) {
+      setError("Min rating cannot exceed max rating.");
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
     setShareFeedback(null);
@@ -152,6 +173,7 @@ function WatchPickerApp() {
         minYear: minYearValue,
         maxYear: maxYearValue,
         minRating: minRatingValue,
+        maxRating: maxRatingValue,
         genreIds: selectedGenres,
       });
 
@@ -257,20 +279,29 @@ function WatchPickerApp() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="rating" className="text-xs uppercase text-gray-400">
-              Min TMDB rating (0-10)
-            </label>
-            <Input
-              id="rating"
-              type="number"
-              min={0}
-              max={10}
-              step={0.1}
-              placeholder="7.5"
-              value={minRating}
-              onChange={(event) => setMinRating(event.target.value)}
-              className="border-white/20 bg-black/50 text-white placeholder:text-gray-500"
-            />
+            <label className="text-xs uppercase text-gray-400">TMDB rating (min / max)</label>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <Input
+                type="number"
+                min={0}
+                max={10}
+                step={0.1}
+                placeholder="Min 4.5"
+                value={minRating}
+                onChange={(event) => setMinRating(event.target.value)}
+                className="border-white/20 bg-black/50 text-white placeholder:text-gray-500"
+              />
+              <Input
+                type="number"
+                min={0}
+                max={10}
+                step={0.1}
+                placeholder="Max 7.5"
+                value={maxRating}
+                onChange={(event) => setMaxRating(event.target.value)}
+                className="border-white/20 bg-black/50 text-white placeholder:text-gray-500"
+              />
+            </div>
           </div>
         </div>
 
