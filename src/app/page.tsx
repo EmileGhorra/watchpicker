@@ -200,12 +200,24 @@ function WatchPickerApp() {
   return (
     <main className="mx-auto flex min-h-svh w-full max-w-5xl flex-col gap-8 px-6 py-12 text-gray-100 sm:px-10 lg:px-0">
       <section className="space-y-4 text-center sm:text-left">
-        <p className="text-sm uppercase tracking-[0.3em] text-rose-400">
-          WatchPicker
-        </p>
-        <h1 className="text-4xl font-semibold text-white sm:text-5xl">
-          Your next movie night, curated.
-        </h1>
+        <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-start">
+          <Image
+            src="/logo.png"
+            alt="WatchPicker logo"
+            width={72}
+            height={72}
+            className="drop-shadow-[0_10px_25px_rgba(252,165,165,0.35)]"
+            priority
+          />
+          <div className="space-y-1">
+            <p className="text-sm uppercase tracking-[0.3em] text-rose-400">
+              WatchPicker
+            </p>
+            <h1 className="text-4xl font-semibold text-white sm:text-5xl">
+              Your next movie night, curated.
+            </h1>
+          </div>
+        </div>
         <p className="text-base text-gray-300 sm:text-lg">
           Set a mood, hit &ldquo;Pick a Movie&rdquo;, and WatchPicker pulls a
           cinematic gem from TMDB&apos;s massive catalog.

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import "../styles/globals.css";
 
 const sans = Inter({
@@ -17,6 +16,9 @@ const mono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "WatchPicker",
   description: "Netflix-inspired random movie picker powered by TMDB.",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export default function RootLayout({
