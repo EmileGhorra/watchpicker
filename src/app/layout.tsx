@@ -24,6 +24,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
+      <head>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4822244682021794"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body
         className={`${sans.variable} ${mono.variable} antialiased bg-cinematic text-gray-100`}
       >

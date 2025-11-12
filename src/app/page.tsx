@@ -324,11 +324,6 @@ function WatchPickerApp() {
       </section>
 
       <div className="w-full rounded-xl border border-white/10 bg-gray-900/60 p-4 text-center text-sm text-gray-400">
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4822244682021794"
-          crossOrigin="anonymous"
-        />
         <div className="w-full h-24 bg-gray-800/50 rounded-xl flex items-center justify-center text-gray-400 text-sm">
           Ad placeholder
         </div>
